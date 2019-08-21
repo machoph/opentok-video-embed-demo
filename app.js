@@ -6,6 +6,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
+
 const debug = require('util').debuglog('app');
 
 // Expose in-memory DB as `global`
@@ -13,6 +14,8 @@ global.DB = require('./db');
 
 // Initiate express application
 const app = express();
+
+
 
 // view engine setup
 app.set('view engine', 'ejs');
@@ -45,6 +48,7 @@ app.use(function (req, res, next) {
   err.status = 404;
   next(err);
 });
+
 
 // error handler
 // no stacktraces leaked to user unless in development environment

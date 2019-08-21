@@ -7,6 +7,14 @@
 const app = require('../app');
 const debug = require('util').debuglog('app');
 const http = require('http');
+var https = require('https');
+var fs = require('fs');
+var env = process.env.NODE_ENV || 'development';
+/**
+ * Create HTTP server.
+ */
+var server = http.createServer(app);
+
 
 /**
  * Get port from environment and store in Express.
@@ -15,12 +23,24 @@ const http = require('http');
 const port = process.env.PORT || '3000';
 app.set('port', port);
 
-/**
- * Create HTTP server.
- */
-const server = http.createServer(app);
+//ssl
+if (env === 'development') {
+    server = https.createServer({
+        key: fs.readFileSync(__dirname + '/../server/server.key', 'utf8'),
+        cert: fs.readFileSync(__dirname + '/../server/server.crt', 'utf8')
+    }, app);
+}
 
-server.listen(port);
+
+server.listen(port, function() {
+    console.log('Listening on port ' + port);
+    console.log('NODE_ENV  = ' + env);
+   
+});
+
+
+
+
 server.on('error', on_error);
 server.on('listening', on_listening);
 
